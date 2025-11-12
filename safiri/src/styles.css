@@ -1,0 +1,19 @@
+/* src/styles.css */
+/* Tailwind directives, inclui suporte a modo escuro */
+/* Antes de usar, configura o Tailwind no projeto (instruções abaixo) */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Tema simples: define variáveis se quiser personalizar */
+:root {
+  --color-nature: #2ecc71; /* verde */
+  --color-sand: #f6e6b4;   /* areia */
+  --color-sky: #3498db;    /* azul */
+}
+
+/* Exemplo de utilitário custom (opcional) */
+.btn-primary {
+  @apply bg-emerald-600 text-white px-4 py-2 rounded;
+}

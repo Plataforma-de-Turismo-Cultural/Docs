@@ -1,0 +1,62 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* transições globais suaves para troca de tema */
+:root {
+  --transition-fast: 150ms;
+}
+html, body {
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+/* exemplo de background utilitário em dark (se precisares) */
+.dark body {
+  background-color: #0f172a; /* ou usa classes tailwind */
+  color: #f9f9f9;
+}
+
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-slideDown {
+  animation: slideDown 0.25s ease-out;
+}
+.feed-page {
+  background: #f9f9f9;
+  padding: 30px;
+  min-height: 100vh;
+}
+
+.feed-title {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #222;
+}
+
+.posts-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+.post-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+}
+
+.post-card video {
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
