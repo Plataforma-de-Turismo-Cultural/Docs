@@ -1,148 +1,70 @@
-Plataforma Digital Colaborativa para Promoção do Turismo e Património Cultural
+# Getting Started with Create React App
 
-Descrição do Projeto
-A Plataforma Digital Colaborativa para Promoção do Turismo e Património Cultural é um sistema inteligente que utiliza Aprendizado de Máquina (Machine Learning) para classificar publicações culturais, detetar spam e gerar recomendações personalizadas de locais turísticos e patrimónios históricos de Angola.
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-O projeto está alinhado com o ODS 11.4 das Nações Unidas, que incentiva a proteção do património cultural e natural. Desenvolvido com Django (backend), React (frontend) e Python (ML), o sistema integra algoritmos de IA para promover o turismo sustentável e a valorização da identidade angolana.
+## Available Scripts
 
+In the project directory, you can run:
 
+### `npm start`
 
-Estrutura do Projeto
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-project-root/
-│
-├── backend/ (Django)
-│   ├── api/
-│   ├── models/
-│   ├── ml/
-│   └── manage.py
-│
-├── frontend/ (React)
-│   ├── src/
-│   │   ├── components/
-│   │   ├── pages/
-│   │   ├── services/
-│   │   └── context/
-│   └── package.json
-│
-├── ml/ (Machine Learning)
-│   ├── data/
-│   │   └── posts.csv
-│   ├── notebooks/
-│   │   └── model_training.ipynb
-│   ├── models/
-│   │   ├── logistic_regression.pkl
-│   │   └── naive_bayes.pkl
-│   └── app.py
-│
-└── README.md
+The page will reload when you make changes.\
+You may also see any lint errors in the console.
 
+### `npm test`
 
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-Componentes Principais
+### `npm run build`
 
-Frontend (React.js)
-- Interface colaborativa e responsiva.  
-- Exibe publicações, recomendações culturais e dashboards.  
-- Integração com API via Axios.
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
-Backend (Django REST Framework)
-- Gerencia utilizadores, autenticação (JWT) e dados.  
-- Conecta-se ao módulo de ML via endpoints REST.
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
 
-Módulo de Aprendizado de Máquina (Flask + Scikit-learn)
-- Modelos usados: Logistic Regression e Naive Bayes.  
-- Funções:
-  - `/api/ml/classify`: classifica publicações (categoria e spam);  
-  - `/api/ml/recommendations/<user_id>`: recomenda destinos culturais.
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
+### `npm run eject`
 
-Dataset
+**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-O dataset contém 50 publicações simuladas com campos:
+If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-id | texto | localidade | likes | comentarios | spam | categoria
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
 
-Exemplo:
+You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
-12 | "Visitei a Fortaleza de São Miguel, um local incrível de história angolana!" | Luanda | 120 | 34 | False | Património
+## Learn More
 
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-Os dados foram criados com base em patrimónios reais de Angola, como Mbanza Kongo, Museu da Escravatura e Palanca Negra.
+To learn React, check out the [React documentation](https://reactjs.org/).
 
-Pipeline de Machine Learning
+### Code Splitting
 
-1. Coleta e limpeza de dados
-   - Remoção de stopwords, URLs e pontuação.  
+This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
 
-2. Tokenização e Vetorização (TF-IDF)
-   - Conversão de texto em representações numéricas.  
+### Analyzing the Bundle Size
 
-3. Treinamento dos modelos
-   - Logistic Regression → Classificação cultural.  
-   - Naive Bayes → Deteção de spam.  
+This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
 
-4. Avaliação
-   - F1-score, Precisão, Revocação e AUC.  
+### Making a Progressive Web App
 
-5. Integração com API Flask
-   - Modelos exportados em `.pkl` e servidos via endpoints REST.
+This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
 
-Execução do Projeto
+### Advanced Configuration
 
- Requisitos
-- Python 3.10+  
-- Node.js 18+  
-- PostgreSQL  
-- Bibliotecas: pandas, scikit-learn, matplotlib, flask, django, react  
+This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
 
-Passos para Execução
+### Deployment
 
-Backend (Django)
-cd backend
-python manage.py migrate
-python manage.py runserver
+This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
 
+### `npm run build` fails to minify
 
-Módulo de Machine Learning
-
-cd ml
-python app.py
-
-
-Frontend (React)
-cd frontend
-npm install
-npm start
-
-Aceder à aplicação em:
-`http://localhost:3000`
-
-Resultados Obtidos
-
-| Modelo              | F1-Score | AUC  | Precisão | Revocação |
-| ------------------- | -------- | ---- | -------- | --------- |
-| Logistic Regression | 0.88     | 0.91 | 0.90     | 0.86      |
-| Naive Bayes         | 0.82     | 0.87 | 0.83     | 0.80      |
-
-Os gráficos de desempenho incluem matriz de confusão e comparação de métricas entre modelos.
-
-Contribuições e Melhorias Futuras
-
-* Adição de embeddings contextuais (BERT, FastText).
-* Expansão do dataset com dados reais de instituições culturais angolanas.
-* Inclusão de chatbot multilíngue para recomendações turísticas.
-
-Referências
-
-* Ade-Ibijola, A. (2020). Artificial Intelligence for Social Good in Africa. African Journal of Information Systems.
-* Kunda, D., & Ngoma, M. (2021). Cultural Context in African AI Systems. University of Zambia Press.
-* Silva, F., & Tchissola, M. (2023). Preservação Digital do Património Cultural Angolano através da IA. Revista Angolana de Computação.
-* Russell, S., & Norvig, P. (2022). Artificial Intelligence: A Modern Approach. Pearson Education.
-
-Explicação breve
-- O título e descrição dão uma visão geral do propósito da plataforma.  
-- A estrutura do projeto mostra claramente as pastas e ficheiros.  
-- O pipeline de ML explica passo a passo o processo técnico.  
-- A secção de execução mostra os comandos necessários para correr tudo localmente.  
-- As tabelas de resultados e referências africanas reforçam a qualidade académica.  
+This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
