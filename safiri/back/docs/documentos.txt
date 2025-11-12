@@ -1,0 +1,154 @@
+Perfeito 💡 — queres entender **como o projeto funciona como um todo**, isto é, a **lógica de funcionamento entre os apps (`users`, `posts`, `core`)**, **como os dados fluem** e **como o backend responde às ações do utilizador**.
+
+Vamos ver o **fluxo completo de funcionamento**, dividido em **camadas e etapas**:
+
+---
+
+## 🧱 1️⃣ Estrutura e Função dos Apps
+
+| App              | Função                 | Responsabilidade principal                                         |
+| :--------------- | :--------------------- | :----------------------------------------------------------------- |
+| **`apps.users`** | Gestão de utilizadores | Autenticação, perfis, favoritos                                    |
+| **`apps.posts`** | Interações sociais     | Publicações, comentários, likes e avaliações                       |
+| **`apps.core`**  | Dados base do turismo  | Agências, biodiversidade, sítios históricos (dados institucionais) |
+
+---
+
+## ⚙️ 2️⃣ Fluxo de Funcionamento Geral
+
+O sistema segue uma **sequência lógica de ações** baseada nas relações entre os modelos.
+
+### 🔹 Etapa 1 — Autenticação e Utilizadores
+
+1. O utilizador é criado (`User`), com dados básicos como `username`, `email`, `is_agency`, etc.
+2. Ao ser criado, é gerado automaticamente um `UserProfile` (podes fazer isso via sinal `post_save` no futuro).
+3. Esse utilizador pode:
+
+   * Fazer login (via API `/api/users/`),
+   * Atualizar o perfil (`/api/profiles/`),
+   * Guardar favoritos (`favourites`).
+
+---
+
+### 🔹 Etapa 2 — Dados Base (Core)
+
+Antes de criar posts ou reviews, o sistema precisa conhecer os **dados do turismo**:
+
+* **Agências** (quem gere os destinos)
+* **Sítios históricos**
+* **Registos de biodiversidade**
+
+Esses dados vêm geralmente de **fontes oficiais** (podes importar CSVs, por exemplo).
+
+---
+
+### 🔹 Etapa 3 — Criação de Conteúdo (Posts)
+
+1. Um `User` (normal ou agência) publica um `Post`:
+
+   ```json
+   POST /api/posts/
+   {
+     "author": "uuid_user",
+     "title": "Melhores Praias de Benguela",
+     "text": "Fui a Benguela e adorei!",
+     "destination": "uuid_destino",
+     "category": "uuid_categoria"
+   }
+   ```
+
+2. O backend grava o post, associa ao utilizador e incrementa índices como `created_at` para ordenação.
+
+3. A API devolve o post criado, e ele passa a aparecer no feed.
+
+---
+
+### 🔹 Etapa 4 — Interações (Comentários e Likes)
+
+1. Outros utilizadores podem comentar:
+
+   ```json
+   POST /api/comments/
+   {
+     "post": "uuid_post",
+     "author": "uuid_user",
+     "text": "Que lugar incrível!"
+   }
+   ```
+
+2. Ou reagir com “likes”:
+
+   ```json
+   POST /api/likes/
+   {
+     "post": "uuid_post",
+     "user": "uuid_user"
+   }
+   ```
+
+3. O contador de `likes` e `comments_count` no `Post` é atualizado automaticamente (podes criar signals para isso).
+
+---
+
+### 🔹 Etapa 5 — Reviews de Destinos
+
+1. Utilizadores também podem avaliar destinos (`Review`):
+
+   ```json
+   POST /api/reviews/
+   {
+     "destination": "uuid_destino",
+     "author": "uuid_user",
+     "rating": 5,
+     "title": "Maravilhoso",
+     "text": "Lugar limpo e muito bonito!"
+   }
+   ```
+2. O sistema guarda a avaliação, associando-a ao utilizador e destino.
+
+---
+
+### 🔹 Etapa 6 — Exploração de Dados
+
+O frontend (Flutter ou web) consome endpoints como:
+
+* `/api/posts/` → feed de publicações
+* `/api/destinations/` → lista de destinos turísticos
+* `/api/reviews/?destination=id` → avaliações de um destino
+* `/api/users/` → perfis
+
+Isso permite criar uma **rede social turística**, onde:
+
+* Pessoas partilham experiências (`Post`),
+* Interagem (`Comment`, `Like`),
+* E avaliam destinos (`Review`).
+
+---
+
+## 🔒 3️⃣ Segurança e Permissões
+
+O projeto já pode ser preparado para:
+
+* **Autenticação JWT** (login/logout, endpoints protegidos),
+* **Permissões DRF** (ex: apenas o autor pode editar o seu post),
+* **Filtros e pesquisas** (por destino, categoria, data, etc.).
+
+---
+
+## 🧩 4️⃣ Fluxo Resumido do Sistema
+
+```mermaid
+graph TD
+    A[User] -->|cria| B[UserProfile]
+    A -->|faz| C[Post]
+    C -->|recebe| D[Comment]
+    C -->|recebe| E[Like]
+    A -->|avalia| F[Review]
+    F -->|refere-se a| G[Destination]
+    G -->|pertence a| H[Core Data]
+```
+
+---
+
+Se quiseres, posso criar um **diagrama visual interativo (mermaid ou imagem)** mostrando o fluxo completo entre os apps e os endpoints — quer que eu gere isso?
+

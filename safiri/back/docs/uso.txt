@@ -1,0 +1,165 @@
+Perfeito 👌 Vamos então explicar **a sequência de funcionamento completa do teu projeto Django**, com base na estrutura que estás a usar — incluindo `apps.core`, `apps.users` e `apps.posts` — para perceberes **como tudo se liga e em que ordem o Django processa cada parte até aos dados no banco**.
+
+---
+
+## ⚙️ 1. Estrutura geral do projeto
+
+O Django organiza o projeto em **aplicações (apps)** independentes, cada uma com:
+
+* `models.py` → estrutura dos dados (tabelas)
+* `serializers.py` → transformação entre modelos e JSON
+* `views.py` → lógica de negócios (CRUD, regras)
+* `urls.py` → rotas da API
+* `admin.py` → painel administrativo
+* `tests.py` → testes automáticos (opcional)
+* `apps.py` → configuração da app
+
+No teu caso tens:
+
+```
+apps/
+ ┣ core/
+ ┣ users/
+ ┗ posts/
+```
+
+Cada uma tem o seu conjunto de models, views, serializers e urls.
+
+---
+
+## 🧩 2. Ordem de funcionamento (ao iniciar o projeto)
+
+### (a) `manage.py runserver`
+
+Quando executas:
+
+```bash
+python manage.py runserver
+```
+
+O Django:
+
+1. Carrega as configurações de `settings.py`;
+2. Inicializa as apps listadas em `INSTALLED_APPS`;
+3. Conecta-se ao banco de dados definido em `DATABASES`;
+4. Lê as rotas do ficheiro principal `urls.py`:
+
+   ```python
+   urlpatterns = [
+       path('admin/', admin.site.urls),
+       path('api/', include('apps.core.urls')),
+       path('api/', include('apps.posts.urls')),
+       path('api/', include('apps.users.urls')),
+   ]
+   ```
+
+   Assim, o Django passa todas as requisições que começam com `/api/` para as respetivas apps.
+
+---
+
+## 🔄 3. Sequência de funcionamento da API
+
+Quando o cliente (frontend ou Postman, por exemplo) envia um pedido para o servidor, segue esta sequência:
+
+### Exemplo: GET `/api/users/`
+
+1. **O Django Router** (em `apps.users.urls`) recebe a rota:
+
+   ```python
+   router.register(r'users', UserViewSet)
+   ```
+
+   👉 isto cria automaticamente endpoints:
+
+   * `GET /api/users/` → lista de utilizadores
+   * `POST /api/users/` → cria um novo utilizador
+   * `GET /api/users/{id}/` → detalhe
+   * `PUT/PATCH /api/users/{id}/` → atualização
+   * `DELETE /api/users/{id}/` → remoção
+
+2. **O Django chama a `UserViewSet`** em `views.py`:
+
+   ```python
+   class UserViewSet(viewsets.ModelViewSet):
+       queryset = User.objects.all()
+       serializer_class = UserSerializer
+   ```
+
+3. **O `queryset`** acessa o banco de dados via ORM (Object Relational Mapper).
+
+4. **O `serializer`** converte os objetos `User` para JSON.
+
+5. **O Django Rest Framework (DRF)** retorna a resposta JSON para o cliente.
+
+---
+
+## 🧱 4. Inserção de dados (via API ou Admin)
+
+### 🧩 Opção 1 — Painel administrativo (`/admin`)
+
+1. Vais até `/admin/`;
+2. Inseres manualmente os dados (ex: User, Post, etc.);
+3. O Django cria os registos diretamente no banco (através dos models).
+
+### 🧩 Opção 2 — Via API REST (com Postman, Insomnia, ou frontend)
+
+1. Envia um `POST` para `/api/users/` com JSON:
+
+   ```json
+   {
+     "username": "ze",
+     "password": "1234",
+     "display_name": "Zé Briguento",
+     "phone": "912345678"
+   }
+   ```
+2. O `UserSerializer` valida os dados e cria o objeto no banco.
+3. O servidor devolve:
+
+   ```json
+   {
+     "id": "a4f6c8d2-9c12-4a3a-9b72-5fa9e78f1f9a",
+     "username": "ze",
+     "display_name": "Zé Briguento"
+   }
+   ```
+
+---
+
+## 🧠 5. Ligação entre Apps
+
+* `UserProfile` (em `apps.users`) tem relação OneToOne com `User`.
+* `Post` (em `apps.posts`) pode referenciar `User` como autor.
+* `Core` pode guardar entidades globais como `BaseModel`, `Audit`, etc.
+
+Assim:
+
+```
+User ─── 1:1 ─── UserProfile
+User ─── 1:N ─── Post
+Post ─── N:M ─── UserProfile.favourites
+```
+
+---
+
+## 🧾 6. Sequência prática para iniciar e popular o sistema
+
+1. **Cria o superuser**
+
+   ```bash
+   python manage.py createsuperuser
+   ```
+2. **Entra no admin (`/admin`)** e adiciona:
+
+   * Usuários
+   * Categorias
+   * Posts
+   * Agências (se aplicável)
+3. **Testa as rotas da API** com o Postman:
+
+   * `GET /api/users/`
+   * `POST /api/posts/`
+4. **Integra o frontend** (caso exista) para consumir essas APIs.
+
+---
+
